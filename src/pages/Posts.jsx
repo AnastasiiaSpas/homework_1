@@ -41,42 +41,40 @@ function Posts() {
 	const changePost = async(e) => {
 		e.preventDefault();
 
-		let changePostTitle = inputChangeTitle.current.value;
-		let changeDescription = textareaChangeDescription.current.value; 
-
-		let changePostAdd = await JsonPlaceholder(`posts/${indexChangePost}`,`PUT`, {title: changePostTitle, body: changeDescription});
-		
-		let changePost = posts.forEach((item)=>{
-			if(item.id === indexChangePost){
-				item.title = changePostTitle;
-				item.body = changeDescription
-			}
-		})
-
-		console.log(posts)
-
-		setPosts(prevState => prevState.concat([]));
+		if(indexChangePost){
+			let changePostTitle = inputChangeTitle.current.value;
+			let changeDescription = textareaChangeDescription.current.value; 
 	
+			let changePostAdd = await JsonPlaceholder(`posts/${indexChangePost}`,`PUT`, {title: changePostTitle, body: changeDescription});
+			
+			let changePost = posts.forEach((item)=>{
+				if(item.id === indexChangePost){
+					item.title = changePostTitle;
+					item.body = changeDescription
+				}
+			})
+	
+			setPosts(prevState => prevState.concat([]));
+		
+		}
+		
 		resetChangeForm()
 	}
 
 	const btnDelete = async(e) => {
-		console.log(e.target.parentElement.id)
-		let indexOfPost = posts.findIndex(post=>post.id == e.target.parentElement.id)
+		let indexOfPost = posts.findIndex(post=>post.id === e.target.parentElement.id)
 
 		let deletePost = await JsonPlaceholder(`posts/${indexOfPost}`,`DELETE`);
 	
 		posts.splice(indexOfPost,1)
-		console.log(posts)
+
 		setPosts(prevState => prevState.concat([]));
 	}
 
 	const btnChange = async(e) => {
-		console.log(e.target.parentElement.id)
-		let indexOfPost = Number(e.target.parentElement.id)
+		let indexOfPost = parseInt(e.target.parentElement.id)
 		setIndexChangePost(indexOfPost)
-		let findPost = posts.find(item => item.id == indexOfPost)
-		console.log(findPost)
+		let findPost = posts.find(item => item.id === indexOfPost)
 
 		inputChangeTitle.current.focus()
 		inputChangeTitle.current.value = findPost.title
